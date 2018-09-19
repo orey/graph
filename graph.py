@@ -1,3 +1,12 @@
+#-------------------------------------------------------------------------------
+# Name:        graph.py
+# Purpose:     Graph structures in python
+#
+# Author:      O. Rey
+#
+# Created:     September 2018
+# Copyleft:    GNU GPL v3
+#-------------------------------------------------------------------------------
 import sys, traceback, pickle
 
 DB = 'db.graph'
@@ -79,7 +88,10 @@ class Node(Root):
         
 class Edge(Root):
     '''
-    Edge can be used for directed and undirected graphs
+    Edge can be used for directed and undirected graphs.
+    source and target are here to define the direction of the edge but
+    the edge being in the graph structure, it could be without source and
+    target
     '''
     def __init__(self, sourceID, targetID, domain, ntype, ID, rest={}):
         super().__init__(domain, ntype, ID, rest)
@@ -96,11 +108,15 @@ class Edge(Root):
     def __repr__(self):
         return "Edge - SourceID = " + str(self.source) + "; TargetID = " \
                + str(self.target) + "; " + super().get_descr()
+    def get_source_target(self):
+        return self.source, self.target
         
 class Graph():
     '''
-    Voisinage oriented structure: {Node1 : { Node2 : Edge1, Node3 : Edge 2}}
-    We can have a multigraph.    
+    A graph is a set of nodes, a set of edges and a voisinage tree based on ids
+    Voisinage: {ID_Node1 : { ID_Node2 : ID_Edge1, ID_Node3 : ID_Edge 2}}
+    Voisinage is used for opt
+    We can have a multigraph.  
     '''
     def __init__(self, name, option=OPTIONS[0]):
         self.graph = {}
@@ -110,60 +126,59 @@ class Graph():
             self.option = option
         else:
             self.option = OPTIONS[0]
+        self.nodes = {}
+        self.edges = {}
     def __repr__(self):
         chain = ""
-        if len(self.graph) == 0:
-            return "Graph is empty"
-        for k, v in self.graph.items():
-            chain += k.__repr__() + '\n'
-            for i, j in v.values():
-                chain += j.__repr__()
+        chain += "Nodes: " + self.nodes.__repr__() + '\n'
+        chain += "Edges: " + self.edges.__repr__() + '\n'
         return chain
     def add_node(self, node):
         if not type(node) == Node:
             raise TypeError("Expecting Node in graph")
         if node == None:
             raise ValueError("Node cannot be null")
-        #-- Node has __hash__ and __eq__ methods
-        if not node in self.graph:
-            self.graph[node] = {}
+        id = node.get_id()
+        if not id in self.nodes:
+            self.nodes[node.get_id()] = node
+            # There cannot be edges because the node is new in the graph
+            self.graph[node.get_id()] = {}
         else:
             print("Warning: node is already in the graph")
-
+    def get_node_by_id(self, id):
+        if type(id) == int and id > 0:
+            return self.nodes[id]
+        else:
+            return None
+    def voisinage(self, source, target, id):
+        # assuming source and target are in the graph
+        self.graph[source][target] = id
+        self.graph[target][source] = id  
+    def add_edge(self, edge):
+        if not type(edge) == Edge:
+            raise TypeError("Expected Edge in graph")
+        if edge == None:
+            raise ValueError("Edge cannot be null")
+        id = edge.get_id()
+        if not id in self.edges:
+            # check the ref nodes are existing
+            source, target = edge.get_source_target()
+            if source in self.nodes and target in self.nodes:
+                self.edges[id] = edge
+                self.voisinage(source, target, id)
+            else:
+                raise ValueError("One of the referenced nodes " + \
+                                 "is not in the graph", source, target)
+        else:
+            print("Edge already existing")
+    def graphrep(self):
+        for k, v in self.graph.items():
+            print('--', k)
+            for i, j in v.items():
+                print('----', j, '->>-', i)
         
-def test():
-    mfile = open(DB,'wb')
-    try:
-        pickle.dump(Node("test domain 1","ECO",1), mfile)
-        pickle.dump(Node("test domain 1","ECO",2), mfile)
-        pickle.dump(Node("test domain 1","ECO",3), mfile)
-        pickle.dump(Edge(2, 1, "meca", "LINK", 4, {"rototo" : 12, "camion" : "vert"}), mfile)
-        g = Graph("toto")
-        g.add_node(Node("domain12","Part",125,{"length": 25, "width": 120, "captainage": "YGFY"}))
-        g.add_node(Node("domain13","Part",89,{"length": 10, "width": 80, "captainage": "WTF"}))
-        pickle.dump(g, mfile)
-    except Exception as e:
-        print(e)
-        print("Exception caught: ", type(e), e.args)
-        traceback.print_exc(file=sys.stdout)
-        mfile.close()
-        exit(0)
-    mfile.close()
-
-    mfile = open(DB, 'rb')
-    objects = []
-    count = 0
-    try:
-        while True:
-            objects.append(pickle.load(mfile))
-            count += 1
-    except EOFError:
-        print("Info: end of file reached. Found ", count, "items")
-    for item in objects:
-        print(item)
-    mfile.close()
-    
-
+def main():
+    print("Please, run the unit tests")
 
 if __name__ == "__main__":
-    test()
+    main()
