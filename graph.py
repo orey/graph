@@ -7,7 +7,7 @@
 # Created:     September 2018
 # Copyleft:    GNU GPL v3
 #-------------------------------------------------------------------------------
-import sys, traceback, pickle
+import sys, traceback, pickle, copy
 
 DB = 'db.graph'
 
@@ -78,6 +78,8 @@ class Root():
             return True
         else:
             return False
+    def get_attributes(self):
+        return self.attributes
     
 
 class Node(Root):
@@ -176,6 +178,11 @@ class Graph():
             print('--', k)
             for i, j in v.items():
                 print('----', j, '->>-', i)
+    def clone(self):
+        return copy.deepcopy(self)
+    def get_nodes(self):
+        return self.nodes
+        
         
 def main():
     print("Please, run the unit tests")
