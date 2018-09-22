@@ -19,8 +19,8 @@ In: graph.py
   * ``Graph`` contains:
     * A dictionary of nodes keyed by their uuid.int
     * A dictionary od edges keyed by their uuid.int
-    * A neighborhoud structure always in sync:
-      * {Id_Node1 {IdNode2 : Id_Edge12, IdNode3 : IdEdge13, ...}}
+    * A neighborhood structure always in sync:
+      * {Id_Node1 {Id_Node2 : Id_Edge12, Id_Node3 : Id_Edge13, ...}}
 
 ## Unitary transformations
 
