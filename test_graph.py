@@ -11,26 +11,27 @@ import unittest, traceback, sys
 
 from graph import *
 from db_pickle import PickleDb
+from graph_transformations import *
+
 
 class TestStructures(unittest.TestCase):
     def test_node(self):
-        n1 = Node("dom1","ECO",1)
+        n1 = Node("dom1","ECO")
         print(n1)
         self.assertTrue(True)
-        n2 = Node("dom2","Part",125, \
+        n2 = Node("dom2","Part", \
                   {"field1": 25, "field2": 120, "field3": "Gloups"})
         print(n2)
         self.assertTrue(True)
-    def test_edge(self):
-        e1 = Edge(2, 1, "meca", "LINK", 4, \
+        e1 = Edge(n1.get_uuid(), n2.get_uuid(), "meca", "LINK", \
                  {"rototo" : 12, "camion" : "vert"})
         print(e1)
         self.assertTrue(True)
     def test_graph(self):
         g = Graph("toto")
-        g.add_node(Node("domain12","Part",125, \
+        g.add_node(Node("domain12","Part", \
                         {"length": 25, "width": 120, "captainage": "YGFY"}))
-        g.add_node(Node("domain13","Part",89, \
+        g.add_node(Node("domain13","Part", \
                         {"length": 10, "width": 80, "captainage": "WTF"}))
         print(g)
         self.assertTrue(True)
@@ -38,19 +39,21 @@ class TestStructures(unittest.TestCase):
         try:
             db = PickleDb("test.pgraph")
             # First time: we erase previous data with dump
-            db.dump(Node("test domain 1","ECO",1))
+            db.dump(Node("test domain 1","ECO"))
             print("Node appended to DB")
-            db.append(Node("test domain 1","ECO",2))
+            n2 = Node("test domain 1","ECO")
+            db.append(n2)
             print("Node appended to DB")
-            db.append(Node("test domain 1","ECO",3))
+            n3 = Node("test domain 1","ECO")
+            db.append(n3)
             print("Node appended to DB")
-            db.append(Edge(2, 1, "meca", "LINK", 4, \
+            db.append(Edge(n2.get_uuid(), n3.get_uuid(), "meca", "LINK", \
                            {"rototo" : 12, "camion" : "vert"}))
             print("Edge appended to DB")
             g = Graph("toto")
-            g.add_node(Node("domain12","Part",125, \
+            g.add_node(Node("domain12","Part", \
                            {"length": 25, "width": 120, "captainage": "YGFY"}))
-            g.add_node(Node("domain13","Part",89, \
+            g.add_node(Node("domain13","Part", \
                            {"length": 10, "width": 80, "captainage": "WTF"}))
             db.append(g)
             print("Graph appended to DB")
@@ -72,13 +75,46 @@ class TestStructures(unittest.TestCase):
             exit(0)
     def test_graph(self):
         g = Graph("toto")
-        g.add_node(Node("domain12","Part",125, \
-                        {"length": 25, "width": 120, "captainage": "YGFY"}))
-        g.add_node(Node("domain13","Part",89, \
-                        {"length": 10, "width": 80, "captainage": "WTF"}))
-        g.add_edge(Edge(125,89,"link","BELONGS_TO",236,{"item1":12}))
+        n1 = Node("domain12","Part", \
+                        {"length": 25, "width": 120, "captainage": "YGFY"})
+        g.add_node(n1)
+        n2 = Node("domain13","Part", \
+                        {"length": 10, "width": 80, "captainage": "WTF"})
+        g.add_node(n2)
+        g.add_edge(Edge(n1.get_uuid(),n2.get_uuid(),"link","BELONGS_TO",{"item1":12}))
         g.graphrep()
         
+class TestGraphTransfo(unittest.TestCase):
+    def test_gtfilter(self):
+        print("------------- Filtering node attributes")
+        n1 = Node("gloups","ECR",{"start":10, "end": 15, "color":"blue"})
+        print("n1\n",n1)
+        print("node filtering without side effect")
+        g2, n1bis = gt_filter(None, n1, False, {GT_ATT:["start","color"]})
+        self.assertEqual(g2, None)
+        self.assertNotEqual(n1bis, n1)
+        print(n1bis)
+        g3, n1ter = gt_filter(None, n1, True, {GT_ATT:["start","color"]})
+        self.assertEqual(g3, None)
+        self.assertEqual(n1, n1ter)
+        print(n1ter)
+        n2 = Node("Perlin","Pimpim",{"start":20, "end": 30, "color":"white"})
+        print("Composed transformations")
+        g3, n2bis = gt_filter(*gt_filter(None, n2, False, {GT_ATT:['start']}), \
+                    False, \
+                    {GT_ATT:['color']})
+        self.assertEqual(g3, None)
+        self.assertNotEqual(n2bis, n2)
+        print("------------- Filtering node attributes on graph")
+        g = Graph("toto")
+        g.add_node(Node("test","Part",{"age":12, "field":"rheue"}))    
+        g.add_node(Node("test","Part",{"age":13, "field":"bla"}))    
+        g.add_node(Node("test","Part",{"age":14, "field":"bli"}))    
+        g.add_node(Node("test","Part",{"age":15, "field":"blue"}))
+        print(g)
+        print("filtered with side effect",n1)
+    
+
 
 if __name__ == "__main__":
     unittest.main()

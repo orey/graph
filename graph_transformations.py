@@ -15,7 +15,8 @@ import copy
 GT_ATT = "attributes"
 
 def transform_interface(graph, rootnode, sideeffect, params):
-    # Returns graph, rootnode
+    # Returns tuple graph, rootnode
+    # To compose use: g(*f, side_effect, params)
     pass
 
 def check_params(graph, rootnode, sideeffect, params):
@@ -32,7 +33,7 @@ def gt_filter(graph, rootnode, sideeffect, params):
     def remove_fields_from_node(node, sideeffect, lis):
         n = None
         if not sideeffect:
-            n = copy.deepcopy(node)
+            n = node.clone()
         else:
             n = node
         atts = n.get_attributes()
@@ -64,23 +65,6 @@ def gt_filter(graph, rootnode, sideeffect, params):
         remove_fields_from_node(n, Tue, l)
     return output, None
 
-def test():
-    g = Graph("toto")
-    g.add_node(Node("test","Part",123,{"age":12, "field":"rheue"}))    
-    g.add_node(Node("test","Part",124,{"age":13, "field":"bla"}))    
-    g.add_node(Node("test","Part",125,{"age":14, "field":"bli"}))    
-    g.add_node(Node("test","Part",126,{"age":15, "field":"blue"}))
-    print(g)
-    print("-------------")
-    n1 = Node("gloups","ECR",2245,{"start":10, "end": 15, "color":"blue"})
-    print(n1)
-    print(gt_filter(None, n1, False, {GT_ATT:["start","color"]}))
-    print(n1)
-    print(gt_filter(None, n1, True, {GT_ATT:["start","color"]}))
-    print(n1)
-    n2 = Node("Perlin","Pimpim",4545,{"start":20, "end": 30, "color":"white"})
-    print(gt_filter((gt_filter(None, n2, False, {GT_ATT:['start']})),False,{GT_ATT:['color']}))
-    print("-------------")
     
 
 if __name__ == "__main__":

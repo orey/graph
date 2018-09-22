@@ -7,7 +7,7 @@
 # Created:     September 2018
 # Copyleft:    GNU GPL v3
 #-------------------------------------------------------------------------------
-import sys, traceback, pickle, copy
+import sys, traceback, copy, uuid
 
 DB = 'db.graph'
 
@@ -28,15 +28,19 @@ def check_intfield(value):
         raise ValueError("Field value cannot be null of negative")
     return True
 
+def check_uuidfield(value):
+    if not type(value) == uuid.UUID:
+        raise TypeError("Field value must be uuid.UUID: " + str(value))
+    return True
+
 class Root():
-    def __init__(self, domain, ntype, ID, rest={}):
+    def __init__(self, domain, ntype, rest={}):
         self.attributes = {}
         if check_strfield(domain):
             self.attributes[FIELDS[0]] = domain
         if check_strfield(ntype):
             self.attributes[FIELDS[1]] = ntype
-        if check_intfield(ID):
-            self.attributes[FIELDS[2]] = ID
+        self.attributes[FIELDS[2]] = uuid.uuid1()
         if not type(rest) == dict:
             raise TypeError("Field value must be a dictionary: " + str(rest))
         if len(rest) == 0:
@@ -68,23 +72,29 @@ class Root():
             chain += k + ": " + str(self.attributes[k]) + "; "
         return chain   
     def get_id(self):
-        return self.attributes[FIELDS[2]]
+        return self.attributes[FIELDS[2]].int
     def __hash__(self):
-        return self.attributes[FIELDS[2]]
+        return self.attributes[FIELDS[2]].int
     def __eq__(self, other):
         if other == None:
             return False
-        if other.get_id() == self.attributes[FIELDS[2]]:
+        if other.get_id() == self.attributes[FIELDS[2]].int:
             return True
         else:
             return False
     def get_attributes(self):
         return self.attributes
-    
+    def get_uuid(self):
+        return self.attributes[FIELDS[2]]
+    def clone(self):
+        # This will regenerate a UUID 
+        obj = copy.deepcopy(self)
+        obj.attributes[FIELDS[2]] = uuid.uuid1()
+        return obj
 
 class Node(Root):
-    def __init__(self, domain, ntype, ID, rest={}):
-        super().__init__(domain, ntype, ID, rest)
+    def __init__(self, domain, ntype, rest={}):
+        super().__init__(domain, ntype, rest)
     def __repr__(self):
         return "Node - " + super().get_descr()
         
@@ -95,21 +105,21 @@ class Edge(Root):
     the edge being in the graph structure, it could be without source and
     target
     '''
-    def __init__(self, sourceID, targetID, domain, ntype, ID, rest={}):
-        super().__init__(domain, ntype, ID, rest)
-        if check_intfield(sourceID):
-            self.source = sourceID
-        if check_intfield(targetID):
-            self.target = targetID
-        #-- someone has to validate the edge in the graph
+    def __init__(self, sourceUUID, targetUUID, domain, ntype, rest={}):
+        super().__init__(domain, ntype, rest)
+        if check_uuidfield(sourceUUID):
+            self.source = sourceUUID
+        if check_uuidfield(targetUUID):
+            self.target = targetUUID
+        #-- the graph will have to validate the edge in the graph
         self.invalid = True
     def is_invalid(self):
         return self.invalid
     def validate(self):
         self.invalid = False
     def __repr__(self):
-        return "Edge - SourceID = " + str(self.source) + "; TargetID = " \
-               + str(self.target) + "; " + super().get_descr()
+        return "Edge - SourceID = " + str(self.source.int) + "; TargetID = " \
+               + str(self.target.int) + "; " + super().get_descr()
     def get_source_target(self):
         return self.source, self.target
         
@@ -120,14 +130,10 @@ class Graph():
     Voisinage is used for opt
     We can have a multigraph.  
     '''
-    def __init__(self, name, option=OPTIONS[0]):
+    def __init__(self, name):
         self.graph = {}
         if check_strfield(name):
             self.name = name
-        if option == OPTIONS[1]:
-            self.option = option
-        else:
-            self.option = OPTIONS[0]
         self.nodes = {}
         self.edges = {}
     def __repr__(self):
@@ -140,6 +146,7 @@ class Graph():
             raise TypeError("Expecting Node in graph")
         if node == None:
             raise ValueError("Node cannot be null")
+        # Indexing is done on uuid.int and not on uuid
         id = node.get_id()
         if not id in self.nodes:
             self.nodes[node.get_id()] = node
@@ -155,7 +162,7 @@ class Graph():
     def voisinage(self, source, target, id):
         # assuming source and target are in the graph
         self.graph[source][target] = id
-        self.graph[target][source] = id  
+        self.graph[target][source] = id
     def add_edge(self, edge):
         if not type(edge) == Edge:
             raise TypeError("Expected Edge in graph")
@@ -165,12 +172,12 @@ class Graph():
         if not id in self.edges:
             # check the ref nodes are existing
             source, target = edge.get_source_target()
-            if source in self.nodes and target in self.nodes:
+            if source.int in self.nodes and target.int in self.nodes:
                 self.edges[id] = edge
-                self.voisinage(source, target, id)
+                self.voisinage(source.int, target.int, id)
             else:
                 raise ValueError("One of the referenced nodes " + \
-                                 "is not in the graph", source, target)
+                                 "is not in the graph", source.int, target.int)
         else:
             print("Edge already existing")
     def graphrep(self):
