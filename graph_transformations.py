@@ -13,10 +13,13 @@ from graph import *
 import copy
 
 GT_ATT = "attributes"
+GT_APPLIC = "applicability"
 
-def transform_interface(graph, rootnode, sideeffect, params):
-    # Returns tuple graph, rootnode
-    # To compose use: g(*f, side_effect, params)
+def graph_transformation_interface(graph, rootnode, sideeffect, params):
+    '''
+    Returns tuple graph, rootnode
+    To compose use: g(*f, side_effect, params)
+    '''
     pass
 
 def check_params(graph, rootnode, sideeffect, params):
@@ -30,6 +33,16 @@ def check_params(graph, rootnode, sideeffect, params):
         raise TypeError("Expecting fourth parameter to be a dictionary")
      
 def gt_filter(graph, rootnode, sideeffect, params):
+    '''
+    This graph transformation eleminates useless attributes from a Node
+    or from a whole graph.
+    Expecting params = {"attributes" : ["toto", "titi", "tutu"]}
+    Three options are managed:
+    1. graph = None, rootnode != None => filters the rootnode
+    2. graph != None, rootnode = None => filters the whole nodes matching in the graph
+    3. graph != None, rootnode = None, params = {"applicability" : "TYPE"}
+    => filters only the Nodes with "TYPE" type
+    '''
     def remove_fields_from_node(node, sideeffect, lis):
         n = None
         if not sideeffect:
@@ -53,19 +66,38 @@ def gt_filter(graph, rootnode, sideeffect, params):
     if graph == None:
         return None, remove_fields_from_node(rootnode, sideeffect, l)
     # Graph case
-    if rootnode != None:
-        print("Warning: rootnode provided but not taken into account. Returning None as rootnote")
+    # expecting {"applicability" : ["type1", "type2] } for type restrictions
+    restrict = False
+    la = []
+    if GT_APPLIC in params:
+        la = params[GT_APPLIC]
+        if type(la) != list:
+            raise TypeError("Expecting a list of types after applicability key")
+        if len(la) == 0:
+            print("Warning: List of applicable types is void")
+        else:
+            restrict = True
     output = None
     if sideeffect == False:
+        # TODO: create the clone graph function
         output = copy.deepcopy(graph)
     else:
         output = graph
     nodes = output.get_nodes()
-    for n in nodes.values:
-        remove_fields_from_node(n, Tue, l)
+    if not retrict:
+        for n in nodes.values:
+            remove_fields_from_node(n, True, l)
+    else:
+        for n in nodes.values:
+            if n.get_type() in la: 
+                remove_fields_from_node(n, True, l)
     return output, None
 
-    
+#def gt_changetype(
+
+
+def main():
+    print("Please, run the unit tests")
 
 if __name__ == "__main__":
-    test()
+    main()

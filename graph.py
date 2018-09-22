@@ -69,7 +69,7 @@ class Root():
     def get_descr(self):
         chain = ""
         for k in self.attributes.keys():
-            chain += k + ": " + str(self.attributes[k]) + "; "
+            chain += k + ":" + str(self.attributes[k]) + "|"
         return chain   
     def get_id(self):
         return self.attributes[FIELDS[2]].int
@@ -91,12 +91,14 @@ class Root():
         obj = copy.deepcopy(self)
         obj.attributes[FIELDS[2]] = uuid.uuid1()
         return obj
+    def get_type(self):
+        return self.attributes[FIELDS[1]]
 
 class Node(Root):
     def __init__(self, domain, ntype, rest={}):
         super().__init__(domain, ntype, rest)
     def __repr__(self):
-        return "Node - " + super().get_descr()
+        return "Node||" + super().get_descr() + '|'
         
 class Edge(Root):
     '''
@@ -118,8 +120,8 @@ class Edge(Root):
     def validate(self):
         self.invalid = False
     def __repr__(self):
-        return "Edge - SourceID = " + str(self.source.int) + "; TargetID = " \
-               + str(self.target.int) + "; " + super().get_descr()
+        return "Edge||SourceID:" + str(self.source.int) + "|TargetID:" \
+               + str(self.target.int) + super().get_descr() + '|'
     def get_source_target(self):
         return self.source, self.target
         

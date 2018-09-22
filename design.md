@@ -30,11 +30,11 @@ All graph transformations (GTs) have:
   * A unified interface
     * ``g_output, rootnode_output = gt(g_input, rootnode_input, sideeffect, params)``
     * ``params`` is a ``dict``
-  * GTs can be composed: ``g_output, rootnode_output = gt1(*gt2(g_input, rootnode_input, sideeffect, params)``
+  * GTs can be composed: ``g_output, rootnode_output = gt1(*gt2(g_input, rootnode_input, sideeffect, params))``
 
 ### Filter GT
 
-Remove void attributes/columns
+Remove void attributes/columns => implemented
 
 ### A column is a type indicator
 
