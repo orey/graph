@@ -127,7 +127,8 @@ class Edge(Root):
         
 class Graph():
     '''
-    A graph is a set of nodes, a set of edges and a voisinage tree based on ids
+    A graph is a set of nodes, a set of edges and a neighbor tree based on ids
+    Warning: the indexing is based on uuid.int
     Voisinage: {ID_Node1 : { ID_Node2 : ID_Edge1, ID_Node3 : ID_Edge 2}}
     Voisinage is used for opt
     We can have a multigraph.  
@@ -138,10 +139,11 @@ class Graph():
             self.name = name
         self.nodes = {}
         self.edges = {}
+        self.uuid = uuid.uuid1()
     def __repr__(self):
-        chain = ""
-        chain += "Nodes: " + self.nodes.__repr__() + '\n'
-        chain += "Edges: " + self.edges.__repr__() + '\n'
+        chain = "Graph||ID=" + str(uuid.int) + '\n'
+        chain += "||Nodes|" + self.nodes.__repr__() + '\n'
+        chain += "||Edges|" + self.edges.__repr__() + '\n'
         return chain
     def add_node(self, node):
         if not type(node) == Node:
@@ -188,7 +190,9 @@ class Graph():
             for i, j in v.items():
                 print('----', j, '->>-', i)
     def clone(self):
-        return copy.deepcopy(self)
+        cl = copy.deepcopy(self)
+        cl.uuid = uuid.uuid1()
+        return cl
     def get_nodes(self):
         return self.nodes
         
