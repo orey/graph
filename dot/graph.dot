@@ -1,5 +1,8 @@
 digraph {
 
+graph [fontsize=10 fontname="Verdana" compound=true];
+//node [shape=record fontsize=10 fontname="Verdana"];
+
 subgraph clusterA {
   label="graph.py" ;
 
@@ -28,9 +31,10 @@ subgraph clusterA {
   __init__ -> check_intfield ;
   __init__ -> check_uuidfield ;
 
+  thing -> __init__ [arrowhead=onormal,ltail=clusterC,lhead=clusterB]
+
 }
 
-clusterB -> clusterC [arrowhead="onormal"] ;
 
 
 compareHash [color="blue", fontcolor="blue"]
