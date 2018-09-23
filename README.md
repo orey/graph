@@ -2,4 +2,4 @@
 
 Tests on graph transformations
 
-See [DESIGN.md](design.md)
+See [design page](DESIGN.md)
