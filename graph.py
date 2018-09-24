@@ -98,7 +98,7 @@ class Node(Root):
     def __init__(self, domain, ntype, rest={}):
         super().__init__(domain, ntype, rest)
     def __repr__(self):
-        return "Node||" + super().get_descr() + '|'
+        return ">>Node||" + super().get_descr() + '|'
         
 class Edge(Root):
     '''
@@ -120,8 +120,8 @@ class Edge(Root):
     def validate(self):
         self.invalid = False
     def __repr__(self):
-        return "Edge||SourceID:" + str(self.source.int) + "|TargetID:" \
-               + str(self.target.int) + super().get_descr() + '|'
+        return ">>Edge||SourceID:" + str(self.source.int) + "|TargetID:" \
+               + str(self.target.int) + '||' + super().get_descr() + '|'
     def get_source_target(self):
         return self.source, self.target
         

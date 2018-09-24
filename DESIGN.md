@@ -56,6 +56,20 @@ Create the concept and solve the graph
 
 Create the ``PREVIOUS`` edge
 
+## The problem of graph cloning
+
+It is very simple to do a "rough cloning" operation of a graph: ``h = g.clone()`` with ``clone`` being implemented with ``copy.deepcopy()``.
+
+However, this is not satisfying. We must introduce the notion of "tracking". We'll define a tracking indicator as a comparable sequence of objects that support the ``>`` and ``<`` operators. Thus the tracking objects can be:
+  * ``int`` or ``float`` types
+  * ``datetime.datetime`` objects
+  * Any other object supporting comparisons.
+
+When cloned, a graph will attach all nodes to their ancestor: the node to node ancestor edge is a standard edge.
+
+However, there is an option to also track edges to edges connectivity.
+
+
 ## TODO
 
   * Who manages the position semantics?
