@@ -11,7 +11,7 @@ import sys, traceback, copy, uuid
 
 DB = 'db.graph'
 
-FIELDS = ["domain", "type", "ID"]
+FIELDS = ["domain", "type", "uuid"]
 OPTIONS =["directed", "undirected"]
 
 def check_strfield(name):
@@ -98,7 +98,7 @@ class Node(Root):
     def __init__(self, domain, ntype, rest={}):
         super().__init__(domain, ntype, rest)
     def __repr__(self):
-        return ">>Node||" + super().get_descr() + '|'
+        return "\nNode||" + super().get_descr() + '|'
         
 class Edge(Root):
     '''
@@ -141,7 +141,7 @@ class Graph():
         self.edges = {}
         self.uuid = uuid.uuid1()
     def __repr__(self):
-        chain = "Graph||ID=" + str(uuid.int) + '\n'
+        chain = "Graph||ID=" + str(self.uuid.int) + '\n'
         chain += "||Nodes|" + self.nodes.__repr__() + '\n'
         chain += "||Edges|" + self.edges.__repr__() + '\n'
         return chain
@@ -195,7 +195,28 @@ class Graph():
         return cl
     def get_nodes(self):
         return self.nodes
-        
+
+#-------------------------------------------
+# Utilities for Graph Transformations
+# prefix is gt_*
+#-------------------------------------------
+
+def gt_interface(root, sideeffect=False, **kwargs):
+    '''
+    "root" can be a Graph or a Node
+    Returns a "root" fo the same type than the inbound
+    To compose use: g(f(root, sideeffect, args), sideeffect2, args2)
+    '''
+    pass
+
+def gt_check_params(root, sideeffect):
+    if type(root) != Graph and type(root) != Node:
+        raise TypeError("Expecting root to be a Graph or a Node")
+    if root == None:
+        raise ValueError("Expecting root to be not None")
+    if type(sideeffect) != bool:
+        raise TypeError("Expecting side effect parameter to be a boolean")
+
         
 def main():
     print("Please, run the unit tests")

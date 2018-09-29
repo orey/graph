@@ -11,8 +11,9 @@ import unittest, traceback, sys
 
 from graph import *
 from db_pickle import PickleDb
-from graph_transformations import *
 
+from gt_filter_attributes import *
+from gt_clone             import *
 
 class TestStructures(unittest.TestCase):
     def test_node(self):
@@ -85,26 +86,28 @@ class TestStructures(unittest.TestCase):
         g.graphrep()
         
 class TestGraphTransfo(unittest.TestCase):
-    def test_gtfilter(self):
+    def test_gt_filter_attributes(self):
         print("------------- Filtering node attributes")
         n1 = Node("gloups","ECR",{"start":10, "end": 15, "color":"blue"})
         print("n1\n",n1)
         print("node filtering without side effect")
-        g2, n1bis = gt_filter(None, n1, False, {GT_ATT:["start","color"]})
-        self.assertEqual(g2, None)
+        n1bis = gt_filter_attributes(n1, False, attributes=["start","color"])
         self.assertNotEqual(n1bis, n1)
         print(n1bis)
-        g3, n1ter = gt_filter(None, n1, True, {GT_ATT:["start","color"]})
-        self.assertEqual(g3, None)
+
+        n1ter = gt_filter_attributes(n1, True, attributes=["start","color"])
         self.assertEqual(n1, n1ter)
         print(n1ter)
+
         n2 = Node("Perlin","Pimpim",{"start":20, "end": 30, "color":"white"})
+
         print("Composed transformations")
-        g3, n2bis = gt_filter(*gt_filter(None, n2, False, {GT_ATT:['start']}), \
+        n2bis = gt_filter_attributes( \
+                    gt_filter_attributes(n2, False, attributes=['start']), \
                     False, \
-                    {GT_ATT:['color']})
-        self.assertEqual(g3, None)
+                    attributes=['color'])
         self.assertNotEqual(n2bis, n2)
+        
         print("------------- Filtering node attributes on graph")
         g = Graph("toto")
         g.add_node(Node("test","Part",{"age":12, "field":"rheue"}))    
@@ -113,7 +116,60 @@ class TestGraphTransfo(unittest.TestCase):
         g.add_node(Node("test","Part",{"age":15, "field":"blue"}))
         print(g)
         print("filtered with side effect",n1)
-    
+        # TODO Complete test
+    def test_gt_clone(self):
+        n1 = test_data_factory(1)
+        n2 = gt_clone(n1)
+        print(n1)
+        print(n2)
+        r = analyze_nodes(n1, n2)
+        self.assertEqual(r, CLONES)
+        
+NOT_SAME_ATTRIBUTES = -1
+NOT_SAME_VALUES = -2
+NOT_SAME_NB_ATTRIBUTES = -3
+SAME_ID_DIFFERENT_CONTENT = -4
+DIFFERENT_ATTRIBUTES = -5
+CLONES = 2
+SAME_NODES = 1
+
+def analyze_nodes(n1, n2):
+    def analyze_field(f1, l1, l2):
+        if f1 not in l2:
+            print('Nodes dont have the same attributes')
+            print(f1, "is not in node 2")
+            return NOT_SAME_ATTRIBUTES
+        if l1[f1] != l2[f1]:
+            print('Nodes have the same attributes but not the same values')
+            print("attribute", f1, "value 1", l1[f1], "value 2", l2[f1])
+            return NOT_SAME_VALUES
+        return True          
+    l1 = n1.get_attributes()
+    l2 = n2.get_attributes()
+    if len(l1) != len(l2):
+        print("The two nodes don't have the same number of attributes")
+        return NOT_SAME_NB_ATTRIBUTES
+    sameid = False
+    if n1.get_id() == n2.get_id():
+        sameid = True
+    newl1 = dict((key,value) for key, value in l1.items() if key != "uuid")
+    if sameid:
+        for att1 in newl1:
+            if not analyze_field(att1, newl1, l2):
+                print('Nodes have the same id but they are not identical')
+                return SAME_ID_DIFFERENT_CONTENT
+        return SAME_NODES
+    else:
+        for att1 in newl1:
+            if not analyze_field(att1, newl1, l2):
+                print('Nodes are different')
+                return DIFFERENT_ATTRIBUTES
+        print("Nodes are probably clones: different id, same fields and values")
+        return CLONES
+
+def test_data_factory(i):
+    if i == 1:
+        return Node("test","Part",{"age":12, "field1":"rheue", "field2":"toto"})
 
 
 if __name__ == "__main__":
