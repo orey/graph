@@ -14,6 +14,10 @@ DB = 'db.graph'
 FIELDS = ["domain", "type", "uuid"]
 OPTIONS =["directed", "undirected"]
 
+#-------------------------------------------
+# Check methods
+#-------------------------------------------
+
 def check_strfield(name):
     if not type(name) == str:
         raise TypeError("Field value is not a string: " + str(name))
@@ -32,6 +36,11 @@ def check_uuidfield(value):
     if not type(value) == uuid.UUID:
         raise TypeError("Field value must be uuid.UUID: " + str(value))
     return True
+
+
+#-------------------------------------------
+# Root, Node, Edge
+#-------------------------------------------
 
 class Root():
     def __init__(self, domain, ntype, rest={}):
@@ -124,6 +133,11 @@ class Edge(Root):
                + str(self.target.int) + '||' + super().get_descr() + '|'
     def get_source_target(self):
         return self.source, self.target
+
+#-------------------------------------------
+# Graph
+# TODO remove clone method
+#-------------------------------------------
         
 class Graph():
     '''
@@ -217,6 +231,33 @@ def gt_check_params(root, sideeffect):
     if type(sideeffect) != bool:
         raise TypeError("Expecting side effect parameter to be a boolean")
 
+#-------------------------------------------
+# Util sub classes
+#-------------------------------------------
+
+class DatetimeTracking(Edge):
+    def __init__(self, sourceUUID, targetUUID, domain, etype):
+        super().__init__(sourceUUID, targetUUID, domain, etype, \
+                       {"datetime":datetime.datetime.now()})
+
+class EdgePath(Edge):
+    """
+    Warning, this is an unconventional concept. 
+    """
+    def __init__(self, e_source, e_target, domain):
+        super().__init__(e_source.get_uuid(), e_target.get_uuid(), domain, \
+                         "PREVIOUS", {"datetime":datetime.datetime.now()})
+        self.e_source = e_source
+        self.e_target = e_target
+    def __repr__(self):
+        return ">>EdgePath||SourceID:" + str(self.source.int) + "|TargetID:" \
+               + str(self.target.int) + '||' + super().get_descr() + '|'
+
+
+
+#-------------------------------------------
+# Main
+#-------------------------------------------
         
 def main():
     print("Please, run the unit tests")

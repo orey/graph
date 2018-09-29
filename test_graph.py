@@ -118,10 +118,11 @@ class TestGraphTransfo(unittest.TestCase):
         print("filtered with side effect",n1)
         # TODO Complete test
     def test_gt_clone(self):
-        n1 = test_data_factory(1)
-        n2 = gt_clone(n1)
-        print(n1)
-        print(n2)
+        n = test_data_factory(1)
+        g = gt_clone(n)
+        print(n)
+        print(g)
+        # reprendre ici
         r = analyze_nodes(n1, n2)
         self.assertEqual(r, CLONES)
         
