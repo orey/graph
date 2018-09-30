@@ -17,6 +17,8 @@ def gt_fusion(root, sideeffect=True, **kwargs):
     """
     root: source Graph
     graph=secondGraph: Type Graph
+    Warning: gt_fusion does not fusion attributes on existing nodes and edges
+    It does nothing if node uuid and edge uuid is already in the Graph
     """
     def add_graph_to_graph(root, graph):
         # The root will be modified
