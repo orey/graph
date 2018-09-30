@@ -1,4 +1,6 @@
-# Design principles
+# READ ME
+
+Some infos about the package.
 
 ## Warning
 
