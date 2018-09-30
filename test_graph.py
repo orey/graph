@@ -16,6 +16,9 @@ from gt_filter_attributes import *
 from gt_clone             import *
 
 class TestStructures(unittest.TestCase):
+    """
+    This test class is testing basic structures from graph.py
+    """
     def test_node(self):
         n1 = Node("dom1","ECO")
         print(n1)
@@ -85,27 +88,36 @@ class TestStructures(unittest.TestCase):
         g.add_edge(Edge(n1.get_uuid(),n2.get_uuid(),"link","BELONGS_TO",{"item1":12}))
         g.graphrep()
         
+
 class TestGraphTransfo(unittest.TestCase):
+    """
+    This test class is testing graph transformations.
+    
+    One method is dedicated to each graph transformation
+    """
     def test_gt_filter_attributes(self):
         print("------------- Filtering node attributes")
         n1 = Node("gloups","ECR",{"start":10, "end": 15, "color":"blue"})
         print("n1\n",n1)
         print("node filtering without side effect")
-        n1bis = gt_filter_attributes(n1, False, attributes=["start","color"])
+        g, n1bis = gt_filter_attributes(None, n1, False, attributes=["start","color"])
+        self.assertEqual(g, None)
         self.assertNotEqual(n1bis, n1)
         print(n1bis)
 
-        n1ter = gt_filter_attributes(n1, True, attributes=["start","color"])
+        g, n1ter = gt_filter_attributes(None, n1, True, attributes=["start","color"])
+        self.assertEqual(g, None)
         self.assertEqual(n1, n1ter)
         print(n1ter)
 
         n2 = Node("Perlin","Pimpim",{"start":20, "end": 30, "color":"white"})
 
         print("Composed transformations")
-        n2bis = gt_filter_attributes( \
-                    gt_filter_attributes(n2, False, attributes=['start']), \
+        g, n2bis = gt_filter_attributes( \
+                    *gt_filter_attributes(None, n2, False, attributes=['start']), \
                     False, \
                     attributes=['color'])
+        self.assertEqual(g, None)
         self.assertNotEqual(n2bis, n2)
         
         print("------------- Filtering node attributes on graph")
@@ -117,15 +129,21 @@ class TestGraphTransfo(unittest.TestCase):
         print(g)
         print("filtered with side effect",n1)
         # TODO Complete test
+
     def test_gt_clone(self):
-        n = test_data_factory(1)
-        g = gt_clone(n)
-        print(n)
-        print(g)
-        # reprendre ici
-        #r = analyze_nodes(n1, n2)
-        #self.assertEqual(r, CLONES)
+        n1 = test_data_factory(1)
+        g, n2 = gt_clone(None, n1)
+        print(n1, n2)
+        self.assertEqual(g, None)
+        r = analyze_nodes(n1, n2)
+        self.assertEqual(r, CLONES)
         
+
+#-------------------------------------------------------------------
+# Utility functions
+#-------------------------------------------------------------------
+
+
 NOT_SAME_ATTRIBUTES = -1
 NOT_SAME_VALUES = -2
 NOT_SAME_NB_ATTRIBUTES = -3
@@ -135,6 +153,16 @@ CLONES = 2
 SAME_NODES = 1
 
 def analyze_nodes(n1, n2):
+    """
+    Utility function that analyzes if two nodes can be the result of a
+    cloning.
+
+    @param n1: Node
+    @param n2: Node
+    @return:   One of the constant: NOT_SAME_ATTRIBUTES, NOT_SAME_VALUES,
+               NOT_SAME_NB_ATTRIBUTES, SAME_ID_DIFFERENT_CONTENT,
+               DIFFERENT_ATTRIBUTES, CLONES, SAME_NODES
+    """
     def analyze_field(f1, l1, l2):
         if f1 not in l2:
             print('Nodes dont have the same attributes')
@@ -168,7 +196,21 @@ def analyze_nodes(n1, n2):
         print("Nodes are probably clones: different id, same fields and values")
         return CLONES
 
+ONE_NODE = 1
+
+
 def test_data_factory(i):
+    """
+    This function creates data. The output type can be different depending on
+    the input.
+
+    @param i: integer.
+    @return:  depends on input
+
+    Possible values:
+
+      - 1: one Node
+    """
     if i == 1:
         return Node("test","Part",{"age":12, "field1":"rheue", "field2":"toto"})
 

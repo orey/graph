@@ -75,11 +75,12 @@
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="gt_filter_attributes-module.html#gt_filter_attributes" class="summary-sig-name">gt_filter_attributes</a>(<span class="summary-sig-arg">root</span>,
-        <span class="summary-sig-arg">sideeffect</span>,
+          <td><span class="summary-sig"><a href="gt_filter_attributes-module.html#gt_filter_attributes" class="summary-sig-name">gt_filter_attributes</a>(<span class="summary-sig-arg">graph</span>,
+        <span class="summary-sig-arg">rootnode</span>,
+        <span class="summary-sig-arg">sideeffect</span>=<span class="summary-sig-default">True</span>,
         <span class="summary-sig-arg">**kwargs</span>)</span><br />
-      This graph transformation eleminates useless attributes from a Node
-or from a whole graph.</td>
+      This graph transformation eleminates useless attributes from a Node 
+      or from a whole graph.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="gt_filter_attributes-pysrc.html#gt_filter_attributes">source&nbsp;code</a></span>
             
@@ -127,14 +128,14 @@ or from a whole graph.</td>
     <td width="15%" align="right" valign="top" class="summary">
       <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
-        <a name="GT_ATT"></a><span class="summary-name">GT_ATT</span> = <code title="'attributes'"><code class="variable-quote">'</code><code class="variable-string">attributes</code><code class="variable-quote">'</code></code>
+        <a name="ATTRIBUTES"></a><span class="summary-name">ATTRIBUTES</span> = <code title="'attributes'"><code class="variable-quote">'</code><code class="variable-string">attributes</code><code class="variable-quote">'</code></code>
     </td>
   </tr>
 <tr>
     <td width="15%" align="right" valign="top" class="summary">
       <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
-        <a name="GT_APPLIC"></a><span class="summary-name">GT_APPLIC</span> = <code title="'applicability'"><code class="variable-quote">'</code><code class="variable-string">applicability</code><code class="variable-quote">'</code></code>
+        <a name="APPLICABILITY"></a><span class="summary-name">APPLICABILITY</span> = <code title="'applicability'"><code class="variable-quote">'</code><code class="variable-string">applicability</code><code class="variable-quote">'</code></code>
     </td>
   </tr>
 <tr>
@@ -190,6 +191,13 @@ or from a whole graph.</td>
     <td width="15%" align="right" valign="top" class="summary">
       <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
+        <a name="SAME"></a><span class="summary-name">SAME</span> = <code title="'same'"><code class="variable-quote">'</code><code class="variable-string">same</code><code class="variable-quote">'</code></code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
         <a name="TYPE"></a><span class="summary-name">TYPE</span> = <code title="'PREVIOUS'"><code class="variable-quote">'</code><code class="variable-string">PREVIOUS</code><code class="variable-quote">'</code></code>
     </td>
   </tr>
@@ -233,8 +241,9 @@ or from a whole graph.</td>
 <tr><td>
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">gt_filter_attributes</span>(<span class="sig-arg">root</span>,
-        <span class="sig-arg">sideeffect</span>,
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">gt_filter_attributes</span>(<span class="sig-arg">graph</span>,
+        <span class="sig-arg">rootnode</span>,
+        <span class="sig-arg">sideeffect</span>=<span class="sig-default">True</span>,
         <span class="sig-arg">**kwargs</span>)</span>
   </h3>
   </td><td align="right" valign="top"
@@ -242,20 +251,26 @@ or from a whole graph.</td>
     </td>
   </tr></table>
   
-  <pre class="literalblock">
-
-This graph transformation eleminates useless attributes from a Node
-or from a whole graph.
-Expecting **kwarks: attributes=[&quot;toto&quot;, &quot;titi&quot;, &quot;tutu&quot;]
-
-Three options are managed:
-1. graph = None, rootnode != None =&gt; filters the rootnode
-2. graph != None, rootnode = None =&gt; filters the whole nodes matching in the graph
-3. graph != None, rootnode = None, params = {&quot;applicability&quot; : &quot;TYPE&quot;}
-=&gt; filters only the Nodes with &quot;TYPE&quot; type
-
-</pre>
+  <p>This graph transformation eleminates useless attributes from a Node or
+  from a whole graph.</p>
   <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>graph</code></strong> - Instance of Graph. Can be None if 'rootnode' is not.</li>
+        <li><strong class="pname"><code>rootnode</code></strong> - Instance of Node. Can be None if 'graph' is not.</li>
+        <li><strong class="pname"><code>sideeffect</code></strong> - bool; default is True. If False, a copy is returned.</li>
+        <li><strong class="pname"><code>kwargs</code></strong> - Expecting: <code>attributes=[&quot;att_name1&quot;, 
+          &quot;att_name2&quot;]</code> as a mandatory option. Another 
+          option, in the case of graph filtering, is the restriction to 
+          some types only. When filtering a graph, the filtering can be 
+          restricted to a list of Node types by using the following option:
+          <code>applicability=[&quot;type1&quot;, &quot;type2&quot;]</code>
+          Types in the list are strings, corresponding to the value of the 
+          'type' attribute in Node and Edge classes.</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>tuple: graph, rootnode. The tuple returned can be reinjected in 
+          another graph transformation.</dd>
   </dl>
 </td></tr></table>
 </div>
@@ -284,7 +299,7 @@ Three options are managed:
   <tr>
     <td align="left" class="footer">
     Generated by Epydoc 3.0.1
-    on Sun Sep 30 09:49:33 2018
+    on Sun Sep 30 14:59:24 2018
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

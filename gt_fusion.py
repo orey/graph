@@ -13,14 +13,24 @@ from gt_clone import *
 
 GRAPH = 'graph'
 
-def gt_fusion(root, sideeffect=True, **kwargs):
+def gt_fusion(graph, rootnode, sideeffect=True, **kwargs):
     """
-    root: source Graph
-    graph=secondGraph: Type Graph
+    Fusion two graphs (with options)
+
+    @param graph:      Instance of Graph. Should not be None.
+    @param rootnode:   Should be None. To add a node to a Graph, use Graph API.
+    @param sideeffect: bool; default is True, which means the resulting
+                       graph is 'graph'. If 'sideeffect=False',
+                       then the returned graph is a new graph
+    @param kwargs:     Expecting: C{graph= the_graph}
+                       If no option is provided, the fusion is a simple one.
+    @return:           tuple: graph, rootnode. The tuple returned can be
+                       reinjected in another graph transformation.
+
     Warning: gt_fusion does not fusion attributes on existing nodes and edges
-    It does nothing if node uuid and edge uuid is already in the Graph
+    It does nothing if node uuid and edge uuid are already in the Graph
     """
-    def add_graph_to_graph(root, graph):
+    def add_graph_to_graph(root, second):
         # The root will be modified
         nodes = second.get_nodes()
         for node in nodes:
@@ -29,19 +39,19 @@ def gt_fusion(root, sideeffect=True, **kwargs):
         for edge in edges:
             root.add_edge(edge)
         return root    
-    gt_check_params(root, sideeffect)
+    # Start
+    gt_check_params(graph, rootnode, sideeffect)
     if len(kwargs) == 0:
         raise ValueError("gt_fusion: expected a second graph for the fusion")
-    if not GRAPH in kwargs:
-        raise ValueError("gt_fusion: expected " + GRAPH + " key in kwargs")
-    second = kwargs[GRAPH]
-    if type(second) != Graph or second == None:
-        raise ValueError("gt_fusion: bad argument (not a graph)")
-    if sideeffect:
-        return add_graph_to_graph(root, second)
+    if GRAPH in kwargs and isinstance(kwargs[GRAPH], Graph):
+        second = kwargs[GRAPH]
+        if sideeffect:
+            return add_graph_to_graph(graph, second)
+        else:
+            g = gt_clone(graph)
+            return add_graph_to_graph(g, second)
     else:
-        g = gt_clone(root)
-        return add_graph_to_graph(g, second)
+        raise ValueError("gt_fusion: expected " + GRAPH + " key in kwargs")
 
 
 def main():

@@ -161,6 +161,7 @@ class Graph():
         self.nodes = {}
         self.edges = {}
         self.uuid = uuid.uuid1()
+        self.edgebridges = {}
     def get_name():
         return self.name
     def __repr__(self):
@@ -219,6 +220,11 @@ class Graph():
         return self.nodes.values()
     def get_edges(self):
         return self.edges.values()
+    def add_bridgeedge(self, bridge):
+        if bridge.get_uuid().int not in self.edgebridges:
+            self.edgebridges[bridge.get_uuid().int] = bridge
+        else:
+            print("Info: bridge always in the graph.", bridge)
 
 #-------------------------------------------
 # Utilities for Graph Transformations
@@ -251,12 +257,12 @@ def gt_check_params(graph, rootnode, sideeffect):
 # Util sub classes
 #-------------------------------------------
 
-class DatetimeTracking(Edge):
+class DatetimeTrackingEdge(Edge):
     def __init__(self, sourceUUID, targetUUID, domain, etype):
         super().__init__(sourceUUID, targetUUID, domain, etype, \
                        {"datetime":datetime.datetime.now()})
 
-class EdgePath(Edge):
+class EdgeBridge(Edge):
     """
     Warning, this is an unconventional concept. 
     """
