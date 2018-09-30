@@ -143,7 +143,6 @@ class TestGraphTransfo(unittest.TestCase):
 # Utility functions
 #-------------------------------------------------------------------
 
-
 NOT_SAME_ATTRIBUTES = -1
 NOT_SAME_VALUES = -2
 NOT_SAME_NB_ATTRIBUTES = -3

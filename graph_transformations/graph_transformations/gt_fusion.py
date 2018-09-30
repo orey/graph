@@ -15,7 +15,11 @@ GRAPH = 'graph'
 
 def gt_fusion(graph, rootnode, sideeffect=True, **kwargs):
     """
-    Fusion two graphs (with options)
+    Fusion two graphs (with options).
+    
+    Warning: gt_fusion does not fusion attributes on existing nodes and edges
+    It does nothing if node uuid and edge uuid are already in the Graph
+
 
     @param graph:      Instance of Graph. Should not be None.
     @param rootnode:   Should be None. To add a node to a Graph, use Graph API.
@@ -27,8 +31,6 @@ def gt_fusion(graph, rootnode, sideeffect=True, **kwargs):
     @return:           tuple: graph, rootnode. The tuple returned can be
                        reinjected in another graph transformation.
 
-    Warning: gt_fusion does not fusion attributes on existing nodes and edges
-    It does nothing if node uuid and edge uuid are already in the Graph
     """
     def add_graph_to_graph(root, second):
         # The root will be modified

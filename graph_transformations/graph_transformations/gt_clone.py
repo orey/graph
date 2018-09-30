@@ -23,13 +23,6 @@ def gt_clone(graph, rootnode, sideeffect=False, **kwargs):
     """
     Clones a node or a graph
 
-    @param graph:      Instance of Graph or None
-    @param rootnode:   Instance of Node or None
-    @param sideeffect: bool. This parameter is not used in this GT
-    @param kwargs:     Dict. See below for options
-    @return:           tuple: graph, rootnode. The tuple returned can be
-                       reinjected in another graph transformation
-
     This graph transformation implements several options.
 
         1. Basic cloning Node
@@ -55,6 +48,15 @@ def gt_clone(graph, rootnode, sideeffect=False, **kwargs):
             C{new_g, n_none = gt_clone(g, None, option='same')}
 
             This option creates also BridgeEdge objects inside the graph.
+
+    @param graph:      Instance of Graph or None
+    @param rootnode:   Instance of Node or None
+    @param sideeffect: bool. This parameter is not used in this GT
+    @param kwargs:     Dict. See below for options
+    @return:           tuple: graph, rootnode. The tuple returned can be
+                       reinjected in another graph transformation
+    
+
     """
     def clone_node(root):
         obj = copy.deepcopy(root)
