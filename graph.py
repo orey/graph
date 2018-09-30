@@ -225,21 +225,27 @@ class Graph():
 # prefix is gt_*
 #-------------------------------------------
 
-def gt_interface(root, sideeffect=False, **kwargs):
+def gt_interface(graph, rootnode, sideeffect, **kwargs):
     '''
-    "root" can be a Graph or a Node
-    Returns a "root" fo the same type than the inbound
-    To compose use: g(f(root, sideeffect, args), sideeffect2, args2)
+    graph is a Graph
+    rootnode is a Node
+    Returns a tuple "graph, rootnode"
+    To compose use: g(*f(graph, rootnode, sideeffect, args), sideeffect2, args2)
     '''
     pass
 
-def gt_check_params(root, sideeffect):
-    if type(root) != Graph and type(root) != Node:
-        raise TypeError("Expecting root to be a Graph or a Node")
-    if root == None:
-        raise ValueError("Expecting root to be not None")
+def gt_check_params(graph, rootnode, sideeffect):
+    """
+    graph or rootnode can be None
+    """
+    if graph != None:
+        if not isinstance(graph, Graph):
+            raise TypeError("gt_check_params: graph should be a Graph")
+    if rootnode != None:
+        if not isinstance(rootnode, Node):
+            raise TypeError("gt_check_params: rootnode should be a Node")
     if type(sideeffect) != bool:
-        raise TypeError("Expecting side effect parameter to be a boolean")
+        raise TypeError("gt_check_params: sideeffect should be bool")
 
 #-------------------------------------------
 # Util sub classes

@@ -16,13 +16,42 @@ NAME   = "CLONE"
 UUID   = "uuid"
 CLONED = "_cloned"
 OPTION = "option"
-BASIC  = 'basic'
+CHAIN  = 'chain'
 
-def gt_clone(root, sideeffect=True, **kwargs):
+def gt_clone(graph, rootnode, sideeffect=False, **kwargs):
     """
-    Can clone a node and a graph.
-    The is a basic mode for node cloning:
-    clone = gt_clone(node, option="basic")
+    Clones a node or a graph
+
+    @type  graph:    instance of Graph or None
+    @param graph:    Input graph to clone
+    @type  rootnode: instance of Node or None
+    @param rootnode: root node
+    @rtype:          tuple: graph, rootnode
+    @return:         The tuple returned can be reinjected in another graph
+                     transformation
+
+    This graph transformation implements several options.
+
+        1. Basic cloning Node
+            C{g_none, new = gt_clone(None, n)}
+
+            'g_none' will stay None. 'new' is totally separated from 'n'. 
+
+        2. Cloning node with chaining
+            C{g, new = gt_clone(None, n, False, option="chain")}
+
+            Creates a subgraph with the original node 'n' and a new one 'new'
+            connected by an edge in domain. Note that 'new' is provided to be
+            immediately accessible. Note also that we clone in the past.
+
+            'rootnode -PREVIOUS-> new'
+
+        3. Basic Graph clone
+            C{new_g, n_none = gt_clone(g, None)}
+
+            Creates a new graph, cloned from the previous one.
+            
+
     """
     def clone_node(root):
         obj = copy.deepcopy(root)
@@ -32,36 +61,46 @@ def gt_clone(root, sideeffect=True, **kwargs):
         clone = copy.deepcopy(e)
         e.attribues[UUID] = uuid.uuid1()
         e.override_source_target(source, target)
-    gt_check_params(root, False)
+    # Start
+    gt_check_params(graph, rootnode, sideeffect)
     # Node case: clone and chain with a DatetimeTracking edge
-    if type(root) == Node:
-        if len(kwargs) != 0:
-            if OPTION in kwargs and kwargs[OPTION] == BASIC:
-                return clone_node(root)
-        obj = clone_node(root)
-        edge = DatetimeTracking(root.get_uuid(),obj.get_uuid(), DOMAIN, TYPE)
-        g = Graph(NAME)
-        g.add_node(root)
-        g.add_node(obj)
-        g.add_edge(edge)
-        return g
+    if graph == None:
+        if rootnode == None:
+            raise ValueError("gt_clone: graph and rootnode arguments are None")
+        # Analyze options
+        if len(kwargs) == 0:
+            # Basic clone
+            return None, clone_node(rootnode)
+        elif OPTION in kwargs and kwargs[OPTION] == CHAIN:
+            obj = clone_node(rootnode)
+            edge = DatetimeTracking(rootnode.get_uuid(),obj.get_uuid(), \
+                                    DOMAIN, TYPE)
+            g = Graph(NAME)
+            g.add_node(rootname)
+            g.add_node(obj)
+            g.add_edge(edge)
+            return g, obj
     # Graph case
     else:
-        name = root.get_name() + CLONED
-        g = Graph(name)
-        # table is old_id, new_id, ids being uuid-s
-        table = {}
-        nodes = root.get_nodes()
-        edges = root.get_edges()
-        for node in nodes:
-            new = clone_node(node)
-            g.add_node(new)
-            table[node.get_uuid()] = new.get_uuid()
-        for edge in edges:
-            source, target = edge.get_source_target()
-            new = clone_edge(edge, table[source], table[target])
-            g.add_edge(new)
-        return g
+        if len(kwargs) == 0:
+            # Clone into a new graph
+            name = graph.get_name() + CLONED
+            g = Graph(name)
+            # table is old_id, new_id, ids being uuid-s
+            table = {}
+            nodes = graph.get_nodes()
+            edges = graph.get_edges()
+            for node in nodes:
+                new = clone_node(node)
+                g.add_node(new)
+                table[node.get_uuid()] = new.get_uuid()
+            for edge in edges:
+                source, target = edge.get_source_target()
+                new = clone_edge(edge, table[source], table[target])
+                g.add_edge(new)
+            return g, None
+        else:
+            pass
 
     
 def main():

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>core</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        Module&nbsp;core
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="core-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="core-module.html">Module core</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno"> 1</tt>  <tt class="py-line"><tt class="py-comment">#-------------------------------------------------------------------------------</tt> </tt>
+<a name="L2"></a><tt class="py-lineno"> 2</tt>  <tt class="py-line"><tt class="py-comment"># Name:        core.py</tt> </tt>
+<a name="L3"></a><tt class="py-lineno"> 3</tt>  <tt class="py-line"><tt class="py-comment"># Purpose:     Reusable graph structures</tt> </tt>
+<a name="L4"></a><tt class="py-lineno"> 4</tt>  <tt class="py-line"><tt class="py-comment">#</tt> </tt>
+<a name="L5"></a><tt class="py-lineno"> 5</tt>  <tt class="py-line"><tt class="py-comment"># Author:      O. Rey</tt> </tt>
+<a name="L6"></a><tt class="py-lineno"> 6</tt>  <tt class="py-line"><tt class="py-comment">#</tt> </tt>
+<a name="L7"></a><tt class="py-lineno"> 7</tt>  <tt class="py-line"><tt class="py-comment"># Created:     September 2018</tt> </tt>
+<a name="L8"></a><tt class="py-lineno"> 8</tt>  <tt class="py-line"><tt class="py-comment"># Copyleft:    GNU GPL v3</tt> </tt>
+<a name="L9"></a><tt class="py-lineno"> 9</tt>  <tt class="py-line"><tt class="py-comment">#-------------------------------------------------------------------------------</tt> </tt>
+<a name="L10"></a><tt class="py-lineno">10</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">datetime</tt><tt class="py-op">,</tt> <tt class="py-name">uuid</tt> </tt>
+<a name="L11"></a><tt class="py-lineno">11</tt>  <tt class="py-line"> </tt>
+<a name="L12"></a><tt class="py-lineno">12</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-0" class="py-name" targets="Module graph=graph-module.html"><a title="graph" class="py-name" href="#" onclick="return doclink('link-0', 'graph', 'link-0');">graph</a></tt> <tt class="py-keyword">import</tt> <tt class="py-op">*</tt> </tt>
+<a name="L13"></a><tt class="py-lineno">13</tt>  <tt class="py-line"> </tt>
+<a name="DatetimeTracking"></a><div id="DatetimeTracking-def"><a name="L14"></a><tt class="py-lineno">14</tt> <a class="py-toggle" href="#" id="DatetimeTracking-toggle" onclick="return toggle('DatetimeTracking');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="core.DatetimeTracking-class.html">DatetimeTracking</a><tt class="py-op">(</tt><tt class="py-base-class">Edge</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="DatetimeTracking-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="DatetimeTracking-expanded"><a name="DatetimeTracking.__init__"></a><div id="DatetimeTracking.__init__-def"><a name="L15"></a><tt class="py-lineno">15</tt> <a class="py-toggle" href="#" id="DatetimeTracking.__init__-toggle" onclick="return toggle('DatetimeTracking.__init__');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="core.DatetimeTracking-class.html#__init__">__init__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">sourceUUID</tt><tt class="py-op">,</tt> <tt class="py-param">targetUUID</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="DatetimeTracking.__init__-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="DatetimeTracking.__init__-expanded"><a name="L16"></a><tt class="py-lineno">16</tt>  <tt class="py-line">        <tt class="py-name">super</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt id="link-1" class="py-name" targets="Method core.DatetimeTracking.__init__()=core.DatetimeTracking-class.html#__init__,Method core.EdgePath.__init__()=core.EdgePath-class.html#__init__,Method db_pickle.PickleDb.__init__()=db_pickle.PickleDb-class.html#__init__,Method graph.DatetimeTracking.__init__()=graph.DatetimeTracking-class.html#__init__,Method graph.Edge.__init__()=graph.Edge-class.html#__init__,Method graph.EdgePath.__init__()=graph.EdgePath-class.html#__init__,Method graph.Graph.__init__()=graph.Graph-class.html#__init__,Method graph.Node.__init__()=graph.Node-class.html#__init__,Method graph.Root.__init__()=graph.Root-class.html#__init__"><a title="core.DatetimeTracking.__init__
+core.EdgePath.__init__
+db_pickle.PickleDb.__init__
+graph.DatetimeTracking.__init__
+graph.Edge.__init__
+graph.EdgePath.__init__
+graph.Graph.__init__
+graph.Node.__init__
+graph.Root.__init__" class="py-name" href="#" onclick="return doclink('link-1', '__init__', 'link-1');">__init__</a></tt><tt class="py-op">(</tt><tt class="py-name">sourceUUID</tt><tt class="py-op">,</tt> <tt class="py-name">targetUUID</tt><tt class="py-op">,</tt> <tt class="py-string">"TRACKING"</tt><tt class="py-op">,</tt> <tt class="py-string">"PREVIOUS"</tt><tt class="py-op">,</tt> \ </tt>
+<a name="L17"></a><tt class="py-lineno">17</tt>  <tt class="py-line">                       <tt class="py-op">{</tt><tt class="py-string">"datetime"</tt><tt class="py-op">:</tt><tt class="py-name">datetime</tt><tt class="py-op">.</tt><tt class="py-name">datetime</tt><tt class="py-op">.</tt><tt class="py-name">now</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">}</tt><tt class="py-op">)</tt> </tt>
+</div></div><a name="L18"></a><tt class="py-lineno">18</tt>  <tt class="py-line"> </tt>
+<a name="EdgePath"></a><div id="EdgePath-def"><a name="L19"></a><tt class="py-lineno">19</tt> <a class="py-toggle" href="#" id="EdgePath-toggle" onclick="return toggle('EdgePath');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="core.EdgePath-class.html">EdgePath</a><tt class="py-op">(</tt><tt class="py-base-class">Edge</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="EdgePath-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="EdgePath-expanded"><a name="L20"></a><tt class="py-lineno">20</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
+<a name="L21"></a><tt class="py-lineno">21</tt>  <tt class="py-line"><tt class="py-docstring">    Warning, this is an unconventional concept. </tt> </tt>
+<a name="L22"></a><tt class="py-lineno">22</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="EdgePath.__init__"></a><div id="EdgePath.__init__-def"><a name="L23"></a><tt class="py-lineno">23</tt> <a class="py-toggle" href="#" id="EdgePath.__init__-toggle" onclick="return toggle('EdgePath.__init__');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="core.EdgePath-class.html#__init__">__init__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">e_source</tt><tt class="py-op">,</tt> <tt class="py-param">e_target</tt><tt class="py-op">,</tt> <tt class="py-param">domain</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="EdgePath.__init__-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="EdgePath.__init__-expanded"><a name="L24"></a><tt class="py-lineno">24</tt>  <tt class="py-line">        <tt class="py-name">super</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt id="link-2" class="py-name"><a title="core.DatetimeTracking.__init__
+core.EdgePath.__init__
+db_pickle.PickleDb.__init__
+graph.DatetimeTracking.__init__
+graph.Edge.__init__
+graph.EdgePath.__init__
+graph.Graph.__init__
+graph.Node.__init__
+graph.Root.__init__" class="py-name" href="#" onclick="return doclink('link-2', '__init__', 'link-1');">__init__</a></tt><tt class="py-op">(</tt><tt class="py-name">e_source</tt><tt class="py-op">.</tt><tt id="link-3" class="py-name" targets="Method graph.Root.get_uuid()=graph.Root-class.html#get_uuid"><a title="graph.Root.get_uuid" class="py-name" href="#" onclick="return doclink('link-3', 'get_uuid', 'link-3');">get_uuid</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-name">e_target</tt><tt class="py-op">.</tt><tt id="link-4" class="py-name"><a title="graph.Root.get_uuid" class="py-name" href="#" onclick="return doclink('link-4', 'get_uuid', 'link-3');">get_uuid</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-name">domain</tt><tt class="py-op">,</tt> \ </tt>
+<a name="L25"></a><tt class="py-lineno">25</tt>  <tt class="py-line">                         <tt class="py-string">"PREVIOUS"</tt><tt class="py-op">,</tt> <tt class="py-op">{</tt><tt class="py-string">"datetime"</tt><tt class="py-op">:</tt><tt class="py-name">datetime</tt><tt class="py-op">.</tt><tt class="py-name">datetime</tt><tt class="py-op">.</tt><tt class="py-name">now</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">}</tt><tt class="py-op">)</tt> </tt>
+<a name="L26"></a><tt class="py-lineno">26</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">e_source</tt> <tt class="py-op">=</tt> <tt class="py-name">e_source</tt> </tt>
+<a name="L27"></a><tt class="py-lineno">27</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">e_target</tt> <tt class="py-op">=</tt> <tt class="py-name">e_target</tt> </tt>
+</div><a name="EdgePath.__repr__"></a><div id="EdgePath.__repr__-def"><a name="L28"></a><tt class="py-lineno">28</tt> <a class="py-toggle" href="#" id="EdgePath.__repr__-toggle" onclick="return toggle('EdgePath.__repr__');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="core.EdgePath-class.html#__repr__">__repr__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="EdgePath.__repr__-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="EdgePath.__repr__-expanded"><a name="L29"></a><tt class="py-lineno">29</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-string">"&gt;&gt;EdgePath||SourceID:"</tt> <tt class="py-op">+</tt> <tt class="py-name">str</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">source</tt><tt class="py-op">.</tt><tt class="py-name">int</tt><tt class="py-op">)</tt> <tt class="py-op">+</tt> <tt class="py-string">"|TargetID:"</tt> \ </tt>
+<a name="L30"></a><tt class="py-lineno">30</tt>  <tt class="py-line">               <tt class="py-op">+</tt> <tt class="py-name">str</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">target</tt><tt class="py-op">.</tt><tt class="py-name">int</tt><tt class="py-op">)</tt> <tt class="py-op">+</tt> <tt class="py-string">'||'</tt> <tt class="py-op">+</tt> <tt class="py-name">super</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt id="link-5" class="py-name" targets="Method graph.Root.get_descr()=graph.Root-class.html#get_descr"><a title="graph.Root.get_descr" class="py-name" href="#" onclick="return doclink('link-5', 'get_descr', 'link-5');">get_descr</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> <tt class="py-op">+</tt> <tt class="py-string">'|'</tt> </tt>
+</div></div><a name="L31"></a><tt class="py-lineno">31</tt>  <tt class="py-line"> </tt>
+<a name="L32"></a><tt class="py-lineno">32</tt>  <tt class="py-line"> </tt>
+<a name="test"></a><div id="test-def"><a name="L33"></a><tt class="py-lineno">33</tt> <a class="py-toggle" href="#" id="test-toggle" onclick="return toggle('test');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="core-module.html#test">test</a><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="test-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="test-expanded"><a name="L34"></a><tt class="py-lineno">34</tt>  <tt class="py-line">    <tt class="py-name">t1</tt> <tt class="py-op">=</tt> <tt id="link-6" class="py-name" targets="Class core.DatetimeTracking=core.DatetimeTracking-class.html,Class graph.DatetimeTracking=graph.DatetimeTracking-class.html"><a title="core.DatetimeTracking
+graph.DatetimeTracking" class="py-name" href="#" onclick="return doclink('link-6', 'DatetimeTracking', 'link-6');">DatetimeTracking</a></tt><tt class="py-op">(</tt><tt class="py-name">uuid</tt><tt class="py-op">.</tt><tt class="py-name">uuid1</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">,</tt><tt class="py-name">uuid</tt><tt class="py-op">.</tt><tt class="py-name">uuid1</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L35"></a><tt class="py-lineno">35</tt>  <tt class="py-line">    <tt class="py-keyword">print</tt><tt class="py-op">(</tt><tt class="py-name">t1</tt><tt class="py-op">)</tt> </tt>
+<a name="L36"></a><tt class="py-lineno">36</tt>  <tt class="py-line">    <tt class="py-name">n1</tt> <tt class="py-op">=</tt> <tt id="link-7" class="py-name" targets="Class graph.Node=graph.Node-class.html"><a title="graph.Node" class="py-name" href="#" onclick="return doclink('link-7', 'Node', 'link-7');">Node</a></tt><tt class="py-op">(</tt><tt class="py-string">"Meca"</tt><tt class="py-op">,</tt><tt class="py-string">"Assembly"</tt><tt class="py-op">)</tt> </tt>
+<a name="L37"></a><tt class="py-lineno">37</tt>  <tt class="py-line">    <tt class="py-name">n2</tt> <tt class="py-op">=</tt> <tt id="link-8" class="py-name"><a title="graph.Node" class="py-name" href="#" onclick="return doclink('link-8', 'Node', 'link-7');">Node</a></tt><tt class="py-op">(</tt><tt class="py-string">"Meca"</tt><tt class="py-op">,</tt><tt class="py-string">"Part"</tt><tt class="py-op">)</tt> </tt>
+<a name="L38"></a><tt class="py-lineno">38</tt>  <tt class="py-line">    <tt class="py-name">e1</tt> <tt class="py-op">=</tt> <tt id="link-9" class="py-name" targets="Class graph.Edge=graph.Edge-class.html"><a title="graph.Edge" class="py-name" href="#" onclick="return doclink('link-9', 'Edge', 'link-9');">Edge</a></tt><tt class="py-op">(</tt><tt class="py-name">n1</tt><tt class="py-op">.</tt><tt id="link-10" class="py-name"><a title="graph.Root.get_uuid" class="py-name" href="#" onclick="return doclink('link-10', 'get_uuid', 'link-3');">get_uuid</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">,</tt><tt class="py-name">n2</tt><tt class="py-op">.</tt><tt id="link-11" class="py-name"><a title="graph.Root.get_uuid" class="py-name" href="#" onclick="return doclink('link-11', 'get_uuid', 'link-3');">get_uuid</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">,</tt><tt class="py-string">"Meca"</tt><tt class="py-op">,</tt><tt class="py-string">"CONTAINS"</tt><tt class="py-op">)</tt> </tt>
+<a name="L39"></a><tt class="py-lineno">39</tt>  <tt class="py-line">    <tt class="py-name">n3</tt> <tt class="py-op">=</tt> <tt id="link-12" class="py-name"><a title="graph.Node" class="py-name" href="#" onclick="return doclink('link-12', 'Node', 'link-7');">Node</a></tt><tt class="py-op">(</tt><tt class="py-string">"Meca"</tt><tt class="py-op">,</tt><tt class="py-string">"Assembly"</tt><tt class="py-op">)</tt> </tt>
+<a name="L40"></a><tt class="py-lineno">40</tt>  <tt class="py-line">    <tt class="py-name">n4</tt> <tt class="py-op">=</tt> <tt id="link-13" class="py-name"><a title="graph.Node" class="py-name" href="#" onclick="return doclink('link-13', 'Node', 'link-7');">Node</a></tt><tt class="py-op">(</tt><tt class="py-string">"Meca"</tt><tt class="py-op">,</tt><tt class="py-string">"Part"</tt><tt class="py-op">)</tt> </tt>
+<a name="L41"></a><tt class="py-lineno">41</tt>  <tt class="py-line">    <tt class="py-name">e2</tt> <tt class="py-op">=</tt> <tt id="link-14" class="py-name"><a title="graph.Edge" class="py-name" href="#" onclick="return doclink('link-14', 'Edge', 'link-9');">Edge</a></tt><tt class="py-op">(</tt><tt class="py-name">n3</tt><tt class="py-op">.</tt><tt id="link-15" class="py-name"><a title="graph.Root.get_uuid" class="py-name" href="#" onclick="return doclink('link-15', 'get_uuid', 'link-3');">get_uuid</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">,</tt><tt class="py-name">n4</tt><tt class="py-op">.</tt><tt id="link-16" class="py-name"><a title="graph.Root.get_uuid" class="py-name" href="#" onclick="return doclink('link-16', 'get_uuid', 'link-3');">get_uuid</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">,</tt><tt class="py-string">"Meca"</tt><tt class="py-op">,</tt><tt class="py-string">"CONTAINS"</tt><tt class="py-op">)</tt> </tt>
+<a name="L42"></a><tt class="py-lineno">42</tt>  <tt class="py-line">    <tt class="py-name">t2</tt> <tt class="py-op">=</tt> <tt id="link-17" class="py-name" targets="Class core.EdgePath=core.EdgePath-class.html,Class graph.EdgePath=graph.EdgePath-class.html"><a title="core.EdgePath
+graph.EdgePath" class="py-name" href="#" onclick="return doclink('link-17', 'EdgePath', 'link-17');">EdgePath</a></tt><tt class="py-op">(</tt><tt class="py-name">e1</tt><tt class="py-op">,</tt> <tt class="py-name">e2</tt><tt class="py-op">,</tt> <tt class="py-string">"Meca"</tt><tt class="py-op">)</tt> </tt>
+<a name="L43"></a><tt class="py-lineno">43</tt>  <tt class="py-line">    <tt class="py-keyword">print</tt><tt class="py-op">(</tt><tt class="py-name">t2</tt><tt class="py-op">)</tt> </tt>
+<a name="L44"></a><tt class="py-lineno">44</tt>  <tt class="py-line">    <tt class="py-keyword">print</tt><tt class="py-op">(</tt><tt class="py-string">"Please, run the unittests"</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L45"></a><tt class="py-lineno">45</tt>  <tt class="py-line"> </tt>
+<a name="L46"></a><tt class="py-lineno">46</tt>  <tt class="py-line"><tt class="py-keyword">if</tt> <tt class="py-name">__name__</tt> <tt class="py-op">==</tt> <tt class="py-string">"__main__"</tt><tt class="py-op">:</tt> </tt>
+<a name="L47"></a><tt class="py-lineno">47</tt>  <tt class="py-line">    <tt id="link-18" class="py-name" targets="Function core.test()=core-module.html#test"><a title="core.test" class="py-name" href="#" onclick="return doclink('link-18', 'test', 'link-18');">test</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L48"></a><tt class="py-lineno">48</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1
+    on Sun Sep 30 09:49:33 2018
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>
