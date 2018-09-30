@@ -123,8 +123,8 @@ class TestGraphTransfo(unittest.TestCase):
         print(n)
         print(g)
         # reprendre ici
-        r = analyze_nodes(n1, n2)
-        self.assertEqual(r, CLONES)
+        #r = analyze_nodes(n1, n2)
+        #self.assertEqual(r, CLONES)
         
 NOT_SAME_ATTRIBUTES = -1
 NOT_SAME_VALUES = -2

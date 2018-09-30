@@ -21,6 +21,7 @@ In: graph.py
     * A dictionary od edges keyed by their uuid.int
     * A neighborhood structure always in sync:
       * {Id_Node1 {Id_Node2 : Id_Edge12, Id_Node3 : Id_Edge13, ...}}
+    * Note: ``add_node`` and ``add_edge`` are not updating nodes and edges that would already exist. The nodes and edges are not touched at all if their ``uuid`` did not change. This is especially true to ``gt_fusion``. Maybe a ``gt_update`` transformation would be required.
 
 ## Unitary transformations
 

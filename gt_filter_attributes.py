@@ -10,8 +10,11 @@
 #-------------------------------------------------------------------------------
 # TODO : manage new numbering systems for nodes in mode without side effects
 
-from graph import *
 import copy
+
+from graph import *
+from gt_clone import *
+
 
 GT_ATT = "attributes"
 GT_APPLIC = "applicability"
@@ -33,7 +36,7 @@ def gt_filter_attributes(root, sideeffect, **kwargs):
     def remove_fields_from_node(node, sideeffect, lis):        
         n = None
         if not sideeffect:
-            n = node.clone()
+            n = gt_clone(node, option='basic')
         else:
             n = node
         atts = n.get_attributes()

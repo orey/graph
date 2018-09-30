@@ -7,11 +7,14 @@
 # Created:     September 2018
 # Copyleft:    GNU GPL v3
 #-------------------------------------------------------------------------------
-import sys, traceback, copy, uuid
+import sys, traceback, copy, uuid, datetime
 
 DB = 'db.graph'
 
-FIELDS = ["domain", "type", "uuid"]
+DOMAIN = 'domain'
+TYPE   = 'type'
+UUID   = 'uuid'
+
 OPTIONS =["directed", "undirected"]
 
 #-------------------------------------------
@@ -46,10 +49,10 @@ class Root():
     def __init__(self, domain, ntype, rest={}):
         self.attributes = {}
         if check_strfield(domain):
-            self.attributes[FIELDS[0]] = domain
+            self.attributes[DOMAIN] = domain
         if check_strfield(ntype):
-            self.attributes[FIELDS[1]] = ntype
-        self.attributes[FIELDS[2]] = uuid.uuid1()
+            self.attributes[TYPE] = ntype
+        self.attributes[UUID] = uuid.uuid1()
         if not type(rest) == dict:
             raise TypeError("Field value must be a dictionary: " + str(rest))
         if len(rest) == 0:
@@ -57,7 +60,7 @@ class Root():
         else:
             for k in rest.keys():
                 if check_strfield(k):
-                    if k in FIELDS:
+                    if k in [DOMAIN, TYPE, UUID]:
                         raise ValueError("Field name is already reserved: " + k)
                     else:
                         self.attributes[k] = rest[k]
@@ -81,27 +84,29 @@ class Root():
             chain += k + ":" + str(self.attributes[k]) + "|"
         return chain   
     def get_id(self):
-        return self.attributes[FIELDS[2]].int
+        return self.attributes[UUID].int
     def __hash__(self):
-        return self.attributes[FIELDS[2]].int
+        return self.attributes[UUID].int
     def __eq__(self, other):
         if other == None:
             return False
-        if other.get_id() == self.attributes[FIELDS[2]].int:
+        if other.get_id() == self.attributes[UUID].int:
             return True
         else:
             return False
     def get_attributes(self):
         return self.attributes
     def get_uuid(self):
-        return self.attributes[FIELDS[2]]
-    def clone(self):
-        # This will regenerate a UUID 
-        obj = copy.deepcopy(self)
-        obj.attributes[FIELDS[2]] = uuid.uuid1()
-        return obj
+        return self.attributes[UUID]
+    #def clone(self):
+    #    # This will regenerate a UUID 
+    #    obj = copy.deepcopy(self)
+    #    obj.attributes[FIELDS[2]] = uuid.uuid1()
+    #    return obj
     def get_type(self):
-        return self.attributes[FIELDS[1]]
+        return self.attributes[TYPE]
+    def override_uuid(self, uuid):
+        self.attributes[UUID] = uuid
 
 class Node(Root):
     def __init__(self, domain, ntype, rest={}):
@@ -133,6 +138,9 @@ class Edge(Root):
                + str(self.target.int) + '||' + super().get_descr() + '|'
     def get_source_target(self):
         return self.source, self.target
+    def override_source_target(self, source, target):
+        self.source = source
+        self.target = target
 
 #-------------------------------------------
 # Graph
@@ -143,9 +151,8 @@ class Graph():
     '''
     A graph is a set of nodes, a set of edges and a neighbor tree based on ids
     Warning: the indexing is based on uuid.int
-    Voisinage: {ID_Node1 : { ID_Node2 : ID_Edge1, ID_Node3 : ID_Edge 2}}
-    Voisinage is used for opt
-    We can have a multigraph.  
+    graph: {ID_Node1 : { ID_Node2 : ID_Edge1, ID_Node3 : ID_Edge 2}}
+    graph is used for optimization of neighbourhood
     '''
     def __init__(self, name):
         self.graph = {}
@@ -154,6 +161,8 @@ class Graph():
         self.nodes = {}
         self.edges = {}
         self.uuid = uuid.uuid1()
+    def get_name():
+        return self.name
     def __repr__(self):
         chain = "Graph||ID=" + str(self.uuid.int) + '\n'
         chain += "||Nodes|" + self.nodes.__repr__() + '\n'
@@ -161,9 +170,9 @@ class Graph():
         return chain
     def add_node(self, node):
         if not type(node) == Node:
-            raise TypeError("Expecting Node in graph")
+            raise TypeError("Graph.add_node: Expecting Node in graph")
         if node == None:
-            raise ValueError("Node cannot be null")
+            raise ValueError("Graph.add_node: ode cannot be null")
         # Indexing is done on uuid.int and not on uuid
         id = node.get_id()
         if not id in self.nodes:
@@ -171,19 +180,15 @@ class Graph():
             # There cannot be edges because the node is new in the graph
             self.graph[node.get_id()] = {}
         else:
-            print("Warning: node is already in the graph")
+            print("Info: node is already in the graph. No node added.")
     def get_node_by_id(self, id):
         if type(id) == int and id > 0:
             return self.nodes[id]
         else:
             return None
-    def voisinage(self, source, target, id):
-        # assuming source and target are in the graph
-        self.graph[source][target] = id
-        self.graph[target][source] = id
     def add_edge(self, edge):
-        if not type(edge) == Edge:
-            raise TypeError("Expected Edge in graph")
+        if not isinstance(edge, Edge):
+            raise TypeError("Expected Edge in graph. Type is:", type(edge))
         if edge == None:
             raise ValueError("Edge cannot be null")
         id = edge.get_id()
@@ -191,13 +196,16 @@ class Graph():
             # check the ref nodes are existing
             source, target = edge.get_source_target()
             if source.int in self.nodes and target.int in self.nodes:
+                # adding edge in edges
                 self.edges[id] = edge
-                self.voisinage(source.int, target.int, id)
+                # enriching graph neighboorhood
+                self.graph[source.int][target.int] = id
+                self.graph[target.int][source.int] = id
             else:
                 raise ValueError("One of the referenced nodes " + \
                                  "is not in the graph", source.int, target.int)
         else:
-            print("Edge already existing")
+            print("Info: Edge already existing. Nothing done.")
     def graphrep(self):
         for k, v in self.graph.items():
             print('--', k)
@@ -208,7 +216,9 @@ class Graph():
         cl.uuid = uuid.uuid1()
         return cl
     def get_nodes(self):
-        return self.nodes
+        return self.nodes.values()
+    def get_edges(self):
+        return self.edges.values()
 
 #-------------------------------------------
 # Utilities for Graph Transformations
