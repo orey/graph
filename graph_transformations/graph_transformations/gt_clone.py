@@ -52,7 +52,7 @@ def gt_clone(graph, rootnode, sideeffect=False, **kwargs):
     @param graph:      Instance of Graph or None
     @param rootnode:   Instance of Node or None
     @param sideeffect: bool. This parameter is not used in this GT
-    @param kwargs:     Dict. See below for options
+    @param kwargs:     Dict. See above for options
     @return:           tuple: graph, rootnode. The tuple returned can be
                        reinjected in another graph transformation
     
