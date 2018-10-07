@@ -10,8 +10,10 @@
 import copy, uuid
 from graph import *
 
-ATTNAME = "attribute_name"
-TYPE    = "type"
+SOURCEATT  = "source_attribute"
+TARGETTYPE = "target_type"
+TARGETATT  = "target_attribute"
+RELTYPE    = "rel_type"
 
 def gt_foreign_key(graph, rootnode, sideeffect=False, **kwargs):
     """
@@ -23,7 +25,7 @@ def gt_foreign_key(graph, rootnode, sideeffect=False, **kwargs):
       1. The source attribute where to find the IDs: C{source_attribute = "attribute"},
       2. The target type: C{target_type = "type"}
       3. The target attribute where to find the IDs: C{target_attribute = "attribute"}
-      4. The type of relationships: C{rel-type = "type_name"}
+      4. The type of relationships: C{rel_type = "type_name"}
 
     The attributes are removed from the source objet and from the target object
     and transformed into instances of relationships with the proper name.
@@ -39,25 +41,35 @@ def gt_foreign_key(graph, rootnode, sideeffect=False, **kwargs):
                        reinjected in another graph transformation
 
     """
+    def get_value_in_args(key, dict):
+        if type(key) != str:
+            raise TypeError("gt_foreign_key: key must be a string")
+        if not key in dict:
+            raise ValueError("gt_foreign_key: expected " + key + " in arguments")
+        value = dict[key]
+        if type(value) != str: 
+            raise TypeError("gt_foreign_key: value should be a string")
+        return value
     # Start
     gt_check_params(graph, rootnode, sideeffect)
+    if graph == None:
+        raise ValueError("gt_foreign_key: graph should not be None")
+    if rootnode == None:
+        raise ValueError("gt_foreign_key: rootnode should not be None")
+    sourcetype = rootnode.get_type()
     if kwargs == None or len(kwargs) == 0 or type(kwargs) != dict:
         raise ValueError("gt_foreign_key: Expecting arguments in **kwargs")
-    attname = ""
-    targettype = ""
-    if not ATTNAME in kwargs:
-        raise ValueError("gt_foreign_key: Expected " + ATTNAME + " in **kwargs")
-    attname = kwargs[ATTNAME]
-    if type(attname) != str:
-        raise ValueError("gt_foreign_key: Expected string for " + ATTNAME)
-    if TYPE in kwargs:
-        targettype = kwargs[TYPE]
-        # type must be a str
-        if type(targettype) != str:
-            raise TypeError("gt_foreign_key: expected string as type descriptor")
-    else:
-        targettype = attname
-    # Continue here by the real transformation
+    sourceatt  = get_value_in_args(SOURCEATT)
+    # test the presence of attribute in the structure
+    
+    targettype = get_value_in_args(TARGETTYPE)
+    targetatt  = get_value_in_args(TARGETATT)
+    rel_type   = get_value_in_args(RELTYPE)
+    snodes = graph.get_nodes_by_type(sourcetype)
+    tnodes = graph.get_nodes_by_type(targettype)
+    for n in snodes:
+        
+        
         
             
         

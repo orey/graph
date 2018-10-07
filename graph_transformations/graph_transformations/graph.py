@@ -107,6 +107,16 @@ class Root():
         return self.attributes[TYPE]
     def override_uuid(self, uuid):
         self.attributes[UUID] = uuid
+    def attribute_in_structure(att):
+        if att in self.attributes:
+            return True
+        else:
+            return False
+    def get_attribute_value(att):
+        if not att in self.attributes():
+            raise AttributeError("Root: attribute not existing")
+        return attribute[att]
+            
 
 class Node(Root):
     def __init__(self, domain, ntype, rest={}):
@@ -225,6 +235,12 @@ class Graph():
             self.edgebridges[bridge.get_uuid().int] = bridge
         else:
             print("Info: bridge always in the graph.", bridge)
+    def get_nodes_by_type(atype):
+        l = []
+        for i, n in nodes.items():
+            if n.get_type() == atype:
+                l.append(n)
+        return l
 
 #-------------------------------------------
 # Utilities for Graph Transformations
