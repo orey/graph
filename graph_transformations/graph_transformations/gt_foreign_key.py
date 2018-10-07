@@ -15,15 +15,21 @@ TYPE    = "type"
 
 def gt_foreign_key(graph, rootnode, sideeffect=False, **kwargs):
     """
-    Manages foreign key and creates an edge instead. If id(B) is an
-    attribute of A, we will have A -attribute_name-> B. This implies
-    the relationships are the other way around in case of list.
+    Manages foreign key and creates an edge instead.
 
-    C{**kwargs} should be:
+    This graph transformation transforms all source type elements defined
+    by "rootnode" type in the graph. It needs 3 arguments to work:
 
-        1. C{attribute_name="name"} This means that the attribute name
-        is the name of the type.
-        2. C{attribute_name="name", type=Type}
+      1. The source attribute where to find the IDs: C{source_attribute = "attribute"},
+      2. The target type: C{target_type = "type"}
+      3. The target attribute where to find the IDs: C{target_attribute = "attribute"}
+      4. The type of relationships: C{rel-type = "type_name"}
+
+    The attributes are removed from the source objet and from the target object
+    and transformed into instances of relationships with the proper name.
+
+    This graph transformation is well adapted to nodes that just come from
+    a CSV import of relational data.
 
     @param graph:      Instance of Graph or None
     @param rootnode:   Instance of Node or None
