@@ -14,7 +14,7 @@ This is a work in  progress.
   *  ``Root`` implements ``__hash__`` and ``__eq__`` based on uuid.int
   *  ``Root`` structure the elements by having:
     *  A ``domain`` attribute
-    *  A ``type`` attribute
+    *  A ``type`` attribute (type is a "special kind of label")
   * Basically a structure is an attribute dictionary
   * ``Graph`` contains:
     * A dictionary of nodes keyed by their uuid.int
@@ -34,8 +34,8 @@ def gt_interface(graph, rootnode, sideeffect, **kwargs):
 
 This interface:
 
-  * Returns a tuple ``graph, rootnode``, in which elements can be ``None``;
-  * All graph transformations can propose a "destructive" mode (``sideffect = True``) and a "non destructive" mode based on a cloning approach;
+  * Returns a tuple ``graph, rootnode``, in which each element can be ``None``;
+  * All graph transformations can propose a "destructive" mode (``sideffect = True``) and a "non destructive" mode based on a cloning approach; The implementation of this option is not mandatory;
   * Graph transformations can be composed: ``g_output, rootnode_output = gt1(*gt2(g_input, rootnode_input, sideeffect, params))`` (* being used to transform the tuple into a list of arguments).
 
 ### Why having a tuple in inbound and outbound interface of a graph transformation?
@@ -51,13 +51,15 @@ A graph transformation like ``gt_clone`` can be applied both to a graph (with op
 
 Another use of this strange API is to tranform graphs while getting a "cursor" of the node that is interesting for us. The graph transformation can return the graph, but the node returned could be used to launch another graph transformation from this rootnode.
 
-## Basic graph transformations
+## Basic set of graph transformations
 
 We believe that in the world of graphs, there are a limited number of graph transformations that can transform all graphs into whatever graph. This is more a philosophical statement than a real proof, but basic graph transformations can act as the basic "verbs" of a peculiar sort of DSL (domain specific language).
 
+If that statement is true, that would mean that every complex graph transformation could be expressed by basic graph transformations or "building block" (like a base in a vectorial space).
+
 We will implement all those "basic" transformations and propose convenient ways to compose them in order to make more advanced graph transformations.
 
-For a research background around those concepts, please refer to:
+For a background around those concepts, please refer to:
 
   * https://orey.github.io/papers/graph/first-article/
   * https://orey.github.io/papers/graph/staf-icgt2018/
@@ -87,7 +89,7 @@ Note on graph cloning while staying in the same graph:
 
 Thi graph transformation fusions two graphs in a destructive or not destructive mode.
 
-### Other basic graph transformations to impelement
+### Other basic graph transformations to implement
 
 #### A column is a type indicator
 
@@ -116,6 +118,7 @@ Gather the concept in one single node and rebuild the graph topology.
 ## TODO
 
   * Who manages the position semantics?
+    * Sometimes, entry files are containing a succession of lines hiding a semanbtic of position. For instance, line 4 is supposed to be connected to line 3.
   * Materialize subgraphs from within a graph?
   * Create specific edges for inter-domain relationships?
 
